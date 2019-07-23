@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.pictureproject.dao.YwZdglDao">
+
+    <select id="getZdglData" resultType="com.example.pictureproject.entity.YwZdgl">
+        select * from yw_zdgl
+        <where>
+            1=1
+        </where>
+    </select>
+
+    <insert id="insertZdgl">
+    insert  into yw_zdgl
+    (
+    sname,sdescribe,surl,createtime,createby
+    )values (
+    #{sname},#{sdescribe},#{surl},now(),#{username}
+    )
+</insert>
+</mapper>
