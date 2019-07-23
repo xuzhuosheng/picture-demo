@@ -27,4 +27,16 @@ public class YwYjtpServiceImpl implements YwYjtpService {
         dataList=ywYjtpDao.getYjtpData(searchContent,zdid);
         return dataList;
     }
+
+    @Override
+    public void doPicDel(List<String> idList) {
+        ywYjtpDao.doPicDel(idList);
+    }
+
+    @Override
+    public List<YwYjtp> getYjtpDataById(String id) {
+        dataList=new ArrayList<>();
+        dataList=ywYjtpDao.getYjtpDataById(id);
+        return dataList;
+    }
 }

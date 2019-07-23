@@ -8,4 +8,8 @@ public interface YwYjtpService {
     void doSavePic(String zdid, String pname, String pdescribe, String path, String creater);
 
     List<YwYjtp> getYjtpData(String searchContent,String zdid);
+
+    void doPicDel(List<String> idList);
+
+    List<YwYjtp> getYjtpDataById(String id);
 }
