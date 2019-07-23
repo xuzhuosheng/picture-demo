@@ -30,8 +30,9 @@ public class PictureController {
 
     private ModelAndView view;
     private ModelMap map;
+    private List<YwYjtp> dataList;
 
-    @Value ("${uploadFilePath}")
+    @Value("${uploadFilePath}")
     private String uploadFilePath;
 
     @Autowired
@@ -40,14 +41,28 @@ public class PictureController {
     @Autowired
     private YwYjtpService ywYjtpService;
 
-    @RequestMapping ("toPicIndex")
-    public ModelAndView toPicIndex() {
+    @RequestMapping("toPicIndex")
+    public ModelAndView toPicIndex(HttpServletRequest request, ModelMap map) {
         view = new ModelAndView();
-        view.setViewName("pic/pic_index");
+        String searchContent = request.getParameter("searchContent");
+        String zdid = request.getParameter("zdid");
+        try {
+            List<YwZdgl> ywZdglList = new ArrayList<>();
+            dataList = ywYjtpService.getYjtpData(searchContent, zdid);
+            ywZdglList = ywZdglService.getZdglData("");
+            map.put("ywZdglList", ywZdglList);
+            map.put("dataList", dataList);
+            view.setViewName("pic/pic_index");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+ 
         return view;
     }
 
-    @RequestMapping ("toPicAdd")
+    @RequestMapping("toPicAdd")
     public ModelAndView toPicAdd(ModelMap map) {
         view = new ModelAndView();
 
@@ -65,17 +80,17 @@ public class PictureController {
     }
 
 
-    @RequestMapping (value = "doSavePic", method = RequestMethod.POST)
+    @RequestMapping(value = "doSavePic", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap doSavePic(HttpServletRequest request,
-                              @RequestParam (value = "file", required = false) MultipartFile multipartFile,
+                              @RequestParam(value = "file", required = false) MultipartFile multipartFile,
                               HttpSession session) {
         map = new ModelMap();
         String zdid = request.getParameter("zdid");
         String pname = request.getParameter("pname");
         String pdescribe = request.getParameter("pdescribe");
-        TXtUser user= (TXtUser) session.getAttribute("user");
-        String creater=user.getUsername();
+        TXtUser user = (TXtUser) session.getAttribute("user");
+        String creater = user.getUsername();
         String path = "";
         try {
 
@@ -88,7 +103,7 @@ public class PictureController {
                 multipartFile.transferTo(targetFile);
             }
 
-            ywYjtpService.doSavePic(zdid, pname, pdescribe, path,creater);
+            ywYjtpService.doSavePic(zdid, pname, pdescribe, path, creater);
 
             map.put("msg", "保存成功！");
         } catch (Exception e) {

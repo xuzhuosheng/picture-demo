@@ -15,6 +15,7 @@ public class YwYjtp implements Serializable {
     private String creater;
     private Date createtime;
     private String bz;
+    private String sname;
 
 
     public int getId() {
@@ -79,5 +80,13 @@ public class YwYjtp implements Serializable {
 
     public void setBz(String bz) {
         this.bz = bz;
+    }
+
+    public String getSname() {
+        return sname;
+    }
+
+    public void setSname(String sname) {
+        this.sname = sname;
     }
 }
