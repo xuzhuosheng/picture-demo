@@ -10,7 +10,8 @@ public class YwYjtp implements Serializable {
     private int id;
     private int zdid;
     private String pname;
-    private String describe;
+    private String pdescribe;
+    private String path;
     private String creater;
     private Date createtime;
     private String bz;
@@ -40,12 +41,20 @@ public class YwYjtp implements Serializable {
         this.pname = pname;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getPdescribe() {
+        return pdescribe;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setPdescribe(String pdescribe) {
+        this.pdescribe = pdescribe;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getCreater() {
