@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -29,13 +30,14 @@ public class YwZdglController {
     private YwZdglService ywZdglService;
 
     @RequestMapping (value = "toZdglIndex")
-    public ModelAndView toZdglIndex(ModelMap map) {
+    public ModelAndView toZdglIndex(ModelMap map, HttpServletRequest request) {
         view = new ModelAndView();
-
+        String searchContent = request.getParameter("searchContent");
         try {
             dataList = new ArrayList<>();
-            dataList = ywZdglService.getZdglData();
+            dataList = ywZdglService.getZdglData(searchContent);
             map.put("dataList", dataList);
+            map.put("searchContent", searchContent);
             view.setViewName("zdgl/zdgl_index");
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,4 +75,63 @@ public class YwZdglController {
 
         return map;
     }
+
+
+    @RequestMapping (value = "doDelZdgl", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap doDelZdgl(HttpServletRequest request) {
+        String ids = request.getParameter("ids");
+        System.out.println(ids);
+        map = new ModelMap();
+        try {
+            String idArr[] = ids.split(",");
+            List<String> idList = Arrays.asList(idArr);
+            ywZdglService.doDelZdgl(idList);
+            map.put("msg", "删除成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", "删除失败！" + e.getMessage());
+        }
+        return map;
+    }
+
+
+    @RequestMapping (value = "toZdglEdit", method = RequestMethod.GET)
+    public ModelAndView toZdglEdit(HttpServletRequest request, ModelMap map) {
+
+        String id = request.getParameter("id");
+        try {
+            dataList = new ArrayList<>();
+            dataList = ywZdglService.getZdglDataById(id);
+            map.put("dataList", dataList);
+            view = new ModelAndView();
+            view.setViewName("zdgl/zdgl_edit");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return view;
+    }
+
+    @RequestMapping (value = "doUpdateZdgl", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap doUpdateZdgl(HttpServletRequest request) {
+        map = new ModelMap();
+        String sname = request.getParameter("sname");
+        String sdescribe = request.getParameter("sdescribe");
+        String surl = request.getParameter("surl");
+        String id = request.getParameter("id");
+        try {
+            ywZdglService.UpdateZdgl(id, sname, sdescribe, surl);
+            map.put("msg", "保存成功！");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", "保存失败！" + e.getMessage());
+        }
+
+        return map;
+    }
+
+
 }

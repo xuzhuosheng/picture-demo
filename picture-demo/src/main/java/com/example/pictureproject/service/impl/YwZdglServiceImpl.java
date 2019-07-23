@@ -19,14 +19,31 @@ public class YwZdglServiceImpl implements YwZdglService {
     private List<YwZdgl> dataList;
 
     @Override
-    public List<YwZdgl> getZdglData() {
+    public List<YwZdgl> getZdglData(String searchContent) {
         dataList = new ArrayList<>();
-        dataList = ywZdglDao.getZdglData();
+        dataList = ywZdglDao.getZdglData(searchContent);
         return dataList;
     }
 
     @Override
     public void insertZdgl(String sname, String sdescribe, String surl, String username) {
         ywZdglDao.insertZdgl(sname, sdescribe, surl, username);
+    }
+
+    @Override
+    public void UpdateZdgl(String id, String sname, String sdescribe, String surl) {
+        ywZdglDao.UpdateZdgl( id,  sname,  sdescribe,  surl);
+    }
+
+    @Override
+    public List<YwZdgl> getZdglDataById(String id) {
+        dataList = new ArrayList<>();
+        dataList = ywZdglDao.getZdglDataById(id);
+        return dataList;
+    }
+
+    @Override
+    public void doDelZdgl(List<String> idList) {
+        ywZdglDao.delZdgl(idList);
     }
 }

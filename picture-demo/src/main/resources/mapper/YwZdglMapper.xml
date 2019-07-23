@@ -7,6 +7,21 @@
         select * from yw_zdgl
         <where>
             1=1
+            <if test="searchContent!='' and searchContent!=null">
+                and (
+                sname like concat(concat('%',#{searchContent}),'%')
+                or sdescribe like concat(concat('%',#{searchContent}),'%')
+                or surl like concat(concat('%',#{searchContent}),'%')
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="getZdglDataById" resultType="com.example.pictureproject.entity.YwZdgl">
+        select * from yw_zdgl
+        <where>
+            1=1
+            and id=#{id}
         </where>
     </select>
 
@@ -18,4 +33,25 @@
     #{sname},#{sdescribe},#{surl},now(),#{username}
     )
 </insert>
+
+    <delete id="delZdgl" parameterType="java.util.List">
+        delete from yw_zdgl
+        <where>
+            id in
+            <foreach collection="idList" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
+
+    <update id="UpdateZdgl">
+        update yw_zdgl
+        <set>
+            sname=#{sname},sdescribe=#{sdescribe},surl=#{surl}
+        </set>
+
+        <where>
+            id=#{id}
+        </where>
+    </update>
 </mapper>
