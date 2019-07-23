@@ -1,9 +1,13 @@
 package com.example.pictureproject.controller.pic;
 
 
+import com.example.pictureproject.entity.TXtUser;
+import com.example.pictureproject.entity.YwYjtp;
 import com.example.pictureproject.entity.YwZdgl;
+import com.example.pictureproject.service.YwYjtpService;
 import com.example.pictureproject.service.YwZdglService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -24,8 +31,14 @@ public class PictureController {
     private ModelAndView view;
     private ModelMap map;
 
+    @Value ("${uploadFilePath}")
+    private String uploadFilePath;
+
     @Autowired
     private YwZdglService ywZdglService;
+
+    @Autowired
+    private YwYjtpService ywYjtpService;
 
     @RequestMapping ("toPicIndex")
     public ModelAndView toPicIndex() {
@@ -55,14 +68,28 @@ public class PictureController {
     @RequestMapping (value = "doSavePic", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap doSavePic(HttpServletRequest request,
-                              @RequestParam (value = "file", required = false) MultipartFile multipartFile) {
+                              @RequestParam (value = "file", required = false) MultipartFile multipartFile,
+                              HttpSession session) {
         map = new ModelMap();
         String zdid = request.getParameter("zdid");
         String pname = request.getParameter("pname");
         String pdescribe = request.getParameter("pdescribe");
-
+        TXtUser user= (TXtUser) session.getAttribute("user");
+        String creater=user.getUsername();
+        String path = "";
         try {
-            System.out.println();
+
+            if (multipartFile.getSize() > 0) {
+                String imgFileName = multipartFile.getOriginalFilename();
+                Date date = new Date();
+                long time = date.getTime();
+                path = time + "_" + imgFileName;
+                File targetFile = new File(uploadFilePath, path);
+                multipartFile.transferTo(targetFile);
+            }
+
+            ywYjtpService.doSavePic(zdid, pname, pdescribe, path,creater);
+
             map.put("msg", "保存成功！");
         } catch (Exception e) {
             e.printStackTrace();
